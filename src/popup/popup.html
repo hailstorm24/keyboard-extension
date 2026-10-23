@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Key overlay</title>
+  <link rel="stylesheet" href="popup.css">
+  <script type="module" src="popup.js"></script>
+</head>
+<body>
+  <header>
+    <label class="switch-row">
+      <span class="title">Key overlay</span>
+      <input id="enabled" type="checkbox" role="switch">
+    </label>
+    <p id="status" class="status" hidden></p>
+  </header>
+
+  <section>
+    <p class="label">Position</p>
+    <div class="corners">
+      <button id="corner-tl" type="button" data-corner="tl" aria-label="Top left"></button>
+      <button id="corner-tr" type="button" data-corner="tr" aria-label="Top right"></button>
+      <button id="corner-bl" type="button" data-corner="bl" aria-label="Bottom left"></button>
+      <button id="corner-br" type="button" data-corner="br" aria-label="Bottom right"></button>
+    </div>
+    <button id="move" type="button" class="wide">Move overlay</button>
+  </section>
+
+  <section>
+    <label class="label" for="size">Size <output id="size-out"></output></label>
+    <input id="size" type="range" min="0.7" max="1.5" step="0.1" data-setting="size">
+    <label class="label" for="speed">Speed <output id="speed-out"></output></label>
+    <input id="speed" type="range" min="1" max="4" step="0.1" data-setting="speed">
+    <label class="label" for="spacing">Spacing <output id="spacing-out"></output></label>
+    <input id="spacing" type="range" min="0" max="32" step="1" data-setting="spacing">
+  </section>
+
+  <section>
+    <label class="check"><input id="mask-sensitive" type="checkbox" data-setting="maskSensitive"> Mask password and payment fields</label>
+    <label class="check"><input id="mask-frames" type="checkbox" data-setting="maskCrossOriginFrames"> Mask other sites' iframes</label>
+    <label class="check"><input id="group-combos" type="checkbox" data-setting="groupCombos"> Group combos (⌘+K)</label>
+    <label class="check"><input id="show-clicks" type="checkbox" data-setting="showClicks"> Show clicks</label>
+  </section>
+
+  <p class="hint">Shortcut: ⌥⇧K turns the overlay on or off for this tab.</p>
+</body>
+</html>

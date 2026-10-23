@@ -9,6 +9,9 @@ document.addEventListener('keydown', (e) => {
     document.getElementById('palette-input').focus();
     window.__pageState.paletteOpens++;
   } else if (e.key === 'Escape') {
+    // Blur before hiding. Hiding a focused input blurs it at whatever moment
+    // Chrome next updates styles, which makes the event order vary run to run.
+    document.activeElement?.blur();
     palette.hidden = true;
     window.__pageState.escapes++;
   } else if (e.key === '?' && document.activeElement === document.body) {

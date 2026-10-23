@@ -61,7 +61,8 @@ test.describe('Privacy: full-session audit', () => {
   test('the extension makes no network requests', async ({ ext, network }) => {
     await fullSession(ext);
     expect(network.violations()).toEqual([]);
-    expect(network.requests.filter((r) => r.fromWorker)).toEqual([]);
+    // The worker loading its own packaged modules is fine; anything else isn't.
+    expect(network.requests.filter((r) => r.fromWorker && !r.url.startsWith('chrome-extension://'))).toEqual([]);
   });
 
   test('the canary never appears in any frame\'s DOM or messages', async ({ ext }) => {

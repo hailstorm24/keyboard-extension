@@ -27,6 +27,7 @@ export async function buildExtension(outDir = join(root, 'dist')) {
     bundle: true,
     format: 'iife',
     target: 'chrome120',
+    loader: { '.css': 'text' },
     legalComments: 'none',
     logLevel: 'warning',
   });

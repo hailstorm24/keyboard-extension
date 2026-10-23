@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Key Overlay",
+  "version": "0.1.0",
+  "description": "Shows the keys you press and where you click, in tabs you turn it on for.",
+  "minimum_chrome_version": "120",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "optional_host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Key overlay",
+    "default_popup": "src/popup/popup.html"
+  },
+  "commands": {
+    "toggle-overlay": {
+      "suggested_key": { "default": "Alt+Shift+K" },
+      "description": "Turn the key overlay on or off for this tab"
+    }
+  }
+}

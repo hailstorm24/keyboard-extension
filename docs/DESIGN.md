@@ -128,7 +128,7 @@ Plain ES modules and no third-party runtime dependencies. The background script 
 - `keydown` and `pointerdown` listeners on `window` in the capture phase, `{ passive: true }`.
 - Never call `preventDefault`, `stopPropagation`, or change the event.
 - Ignore events where `isTrusted` is false, so the page can't put fake keys in the overlay.
-- IME composition: show the final composed text, not each intermediate keystroke.
+- IME composition: show the final composed text, not each intermediate keystroke. The text comes from trusted `input` events during composition, because some input paths end composition with an untrusted `compositionend`. A page faking that event can't add text of its own.
 
 ### Rendering
 

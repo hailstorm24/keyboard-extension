@@ -77,9 +77,10 @@ test.describe('Stage 7: iframes', () => {
   test('clicks in another site\'s iframe show no ripple while it is masked', async ({ ext }) => {
     const page = await ext.openPage('/payment-frame.html');
     await ext.enable(page);
-    await page.frameLocator('#other').locator('body').click({ position: { x: 300, y: 100 } });
+    // Click an empty spot in each frame (below the short <body>, so on <html>).
+    await page.frameLocator('#other').locator('html').click({ position: { x: 300, y: 100 } });
     await expectNoRipples(page);
-    await page.frameLocator('#same').locator('body').click({ position: { x: 300, y: 100 } });
+    await page.frameLocator('#same').locator('html').click({ position: { x: 300, y: 100 } });
     await expect.poll(() => rippleKinds(page)).toEqual(['left']);
   });
 

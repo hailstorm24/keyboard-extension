@@ -127,6 +127,18 @@ test.describe('Stage 3: keys', () => {
     await expectNoKeycaps(page);
   });
 
+  test('composition text faked by the page does not show', async ({ ext }) => {
+    const page = await ext.openPage('/hostile-js.html');
+    await ext.enable(page);
+    await page.evaluate(() => {
+      const field = document.getElementById('field');
+      field.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true, data: '' }));
+      field.dispatchEvent(new InputEvent('input', { bubbles: true, data: 'FAKE', isComposing: true, inputType: 'insertCompositionText' }));
+      field.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: 'FAKE' }));
+    });
+    await expectNoKeycaps(page);
+  });
+
   test('IME composition shows the final text once', async ({ ext }) => {
     const page = await ext.openPage('/editors.html');
     await ext.enable(page);
@@ -156,29 +168,38 @@ test.describe('Stage 3: keys', () => {
 
   test('10,000 keystrokes: capped keycaps, no lost input, flat memory', async ({ ext }) => {
     test.slow();
-    const page = await ext.openPage('/editors.html');
-    await ext.enable(page);
-    await page.locator('#plain').click();
-    const s = await cdp(page);
-    const heap = async () => {
-      await s.send('HeapProfiler.collectGarbage');
-      return (await s.send('Runtime.getHeapUsage')).usedSize;
-    };
-
-    await page.keyboard.type('warmup');
-    const before = await heap();
     const chunk = 'abcdefghijklmnopqrstuvwxyz'.repeat(20).slice(0, 500);
-    let maxOnScreen = 0;
-    for (let i = 0; i < 20; i++) {
-      await page.keyboard.type(chunk);
-      maxOnScreen = Math.max(maxOnScreen, (await readOverlay(page)).keycaps.length);
-    }
-    expect(maxOnScreen).toBeLessThanOrEqual(30);
-    expect(await page.locator('#plain').inputValue()).toHaveLength(6 + 10_000);
 
-    await page.waitForTimeout(4500);
-    expect((await readOverlay(page)).keycaps.length).toBe(0);
-    const after = await heap();
-    expect(after - before).toBeLessThan(5 * 1024 * 1024);
+    // The fixture's recorder keeps every event, so compare heap growth with
+    // the overlay on against the same run with it off.
+    async function run(enabled) {
+      const page = await ext.openPage('/editors.html');
+      if (enabled) await ext.enable(page);
+      await page.locator('#plain').click();
+      const s = await cdp(page);
+      const heap = async () => {
+        await s.send('HeapProfiler.collectGarbage');
+        return (await s.send('Runtime.getHeapUsage')).usedSize;
+      };
+      await page.keyboard.type('warmup');
+      const before = await heap();
+      let maxOnScreen = 0;
+      for (let i = 0; i < 20; i++) {
+        await page.keyboard.type(chunk);
+        maxOnScreen = Math.max(maxOnScreen, (await readOverlay(page)).keycaps.length);
+      }
+      expect(await page.locator('#plain').inputValue()).toHaveLength(6 + 10_000);
+      await page.waitForTimeout(4500);
+      const keycapsLeft = (await readOverlay(page)).keycaps.length;
+      const growth = (await heap()) - before;
+      await page.close();
+      return { maxOnScreen, keycapsLeft, growth };
+    }
+
+    const off = await run(false);
+    const on = await run(true);
+    expect(on.maxOnScreen).toBeLessThanOrEqual(30);
+    expect(on.keycapsLeft).toBe(0);
+    expect(on.growth - off.growth).toBeLessThan(2 * 1024 * 1024);
   });
 });

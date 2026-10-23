@@ -12,12 +12,21 @@ async function areaVars(page) {
   return computedStyle(page, o.keyArea, [VARS.size, VARS.speed, VARS.spacing]);
 }
 
+// Reads the keycap's style in the same poll that finds it: at short speeds it
+// can be gone before a separate read under load.
 async function typeOne(page, ch = 'x') {
   await page.locator('#email').click();
   await page.keyboard.type(ch);
-  await waitForKeycaps(page, [ch.toUpperCase()]);
-  const o = await readOverlay(page);
-  return computedStyle(page, o.keycaps.at(-1).nodeId, ['animation-name', 'animation-duration']);
+  let style = null;
+  await expect
+    .poll(async () => {
+      const cap = (await readOverlay(page)).keycaps.find((k) => k.text === ch.toUpperCase());
+      if (!cap) return false;
+      style = await computedStyle(page, cap.nodeId, ['animation-name', 'animation-duration']).catch(() => null);
+      return style !== null;
+    })
+    .toBe(true);
+  return style;
 }
 
 test.describe('Stage 5: settings', () => {
@@ -74,6 +83,7 @@ test.describe('Stage 5: settings', () => {
   test('popup controls save normalized settings', async ({ ext, context }) => {
     const popup = await context.newPage();
     await popup.goto(ext.popupUrl);
+    await popup.locator('body[data-ready="true"]').waitFor();
 
     await popup.locator(POPUP.speed).fill('3');
     await popup.locator(POPUP.size).fill('1.2');
@@ -91,9 +101,23 @@ test.describe('Stage 5: settings', () => {
     expect(Object.keys(await ext.settings()).sort()).toEqual(SCHEMA_KEYS);
   });
 
+  test('rapid popup changes are all kept', async ({ ext, context }) => {
+    const popup = await context.newPage();
+    await popup.goto(ext.popupUrl);
+    await popup.locator('body[data-ready="true"]').waitFor();
+    for (const v of ['1.1', '2.5', '3.9', '1.7', '3.3']) await popup.locator(POPUP.speed).fill(v);
+    for (const v of ['0.8', '1.4', '1.2']) await popup.locator(POPUP.size).fill(v);
+    await popup.locator(POPUP.spacing).fill('30');
+    await popup.locator(POPUP.groupCombos).uncheck();
+    await expect.poll(() => ext.settings()).toMatchObject({ speed: 3.3, size: 1.2, spacing: 30, groupCombos: false });
+    await popup.waitForTimeout(300);
+    expect(await ext.settings()).toMatchObject({ speed: 3.3, size: 1.2, spacing: 30, groupCombos: false });
+  });
+
   test('popup shows both masking options on by default', async ({ ext, context }) => {
     const popup = await context.newPage();
     await popup.goto(ext.popupUrl);
+    await popup.locator('body[data-ready="true"]').waitFor();
     await expect(popup.locator(POPUP.maskSensitive)).toBeChecked();
     await expect(popup.locator(POPUP.maskFrames)).toBeChecked();
   });

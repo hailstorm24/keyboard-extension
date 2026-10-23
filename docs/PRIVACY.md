@@ -1,6 +1,6 @@
 # Key Overlay privacy policy
 
-_Last updated: [date]_
+_Last updated: Fri Oct 23, 2026
 
 Key Overlay is a Chrome extension that shows the keys you press and the clicks you make as an on-screen overlay, in tabs you turn it on for.
 
@@ -44,4 +44,4 @@ If this policy changes, the new version will be posted at this address with a ne
 
 ## Contact
 
-[your contact email or a link to the project's issue tracker]
+[https://github.com/hailstorm24/keyboard-extension/issues](https://github.com/hailstorm24/keyboard-extension/issues)

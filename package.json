@@ -11,7 +11,9 @@
     "test:static": "node --test 'test/static/*.test.js'",
     "test:e2e": "playwright test",
     "lint": "eslint src",
-    "fixtures": "node test/server.js"
+    "fixtures": "node test/server.js",
+    "package": "npm test && node scripts/package.js",
+    "icons": "node scripts/make-icons.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

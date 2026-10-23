@@ -66,8 +66,16 @@ describe('manifest.json', () => {
     assert.notEqual(manifest.incognito, 'split');
   });
 
-  test('source manifest is not marked as built (the build adds version_name)', () => {
-    assert.equal(manifest.version_name, undefined);
+  test('every icon exists at the size its key says', async () => {
+    const icons = { ...manifest.icons, ...manifest.action?.default_icon };
+    assert.deepEqual(Object.keys(manifest.icons ?? {}).sort(), ['128', '16', '32', '48']);
+    for (const [size, path] of Object.entries(icons)) {
+      const png = await readFile(new URL(path, root));
+      // PNG header: width and height are big-endian at bytes 16 and 20.
+      assert.equal(png.toString('ascii', 1, 4), 'PNG', path);
+      assert.equal(png.readUInt32BE(16), Number(size), `${path} width`);
+      assert.equal(png.readUInt32BE(20), Number(size), `${path} height`);
+    }
   });
 
   test('no update_url pointing at a third-party server', () => {

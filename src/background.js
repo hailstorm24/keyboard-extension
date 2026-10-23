@@ -49,9 +49,6 @@ export async function setTabEnabled(tabId, enabled) {
     return { ok: true };
   }
 
-  // Only scripts/build.js output has content.js; the source folder doesn't.
-  if (!chrome.runtime.getManifest().version_name?.endsWith('(built)')) return { ok: false, reason: 'not-built' };
-
   const tab = await chrome.tabs.get(tabId).catch(() => null);
   if (!tab || isRestrictedUrl(tab.url)) return { ok: false, reason: 'restricted' };
   if (tab.url?.startsWith('file:') && !(await chrome.extension.isAllowedFileSchemeAccess())) {
@@ -62,6 +59,8 @@ export async function setTabEnabled(tabId, enabled) {
   } catch (err) {
     // chrome:// and other pages we can't see the URL of only fail here.
     const message = String(err?.message ?? err);
+    // Only scripts/build.js output has content.js; the source folder doesn't.
+    if (message.includes(`Could not load file: '${CONTENT_SCRIPT}'`)) return { ok: false, reason: 'not-built' };
     if (tab.url === undefined && /cannot (access|be scripted)|chrome:\/\/|extensions gallery/i.test(message)) {
       return { ok: false, reason: 'restricted' };
     }

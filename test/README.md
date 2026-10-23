@@ -5,7 +5,7 @@ Written before the extension, from [docs/DESIGN.md](../docs/DESIGN.md) and [docs
 | Command | What it runs |
 |---|---|
 | `npm run lint` | ESLint over `src/`, with the banned-API rules from TRUST.md |
-| `npm run test:static` | Manifest permissions vs. the allowlist, no runtime dependencies, banned-API text search |
+| `npm run test:static` | Manifest permissions vs. the allowlist, no runtime dependencies, banned-API and network-API text search over `src/` and over a fresh build (what actually ships) |
 | `npm run test:unit` | Pure logic in Node: key labels, modifier tracking, masking, clicks, settings, position |
 | `npm run test:e2e` | Builds the extension and drives it in Chromium with Playwright |
 | `npm test` | All of the above |

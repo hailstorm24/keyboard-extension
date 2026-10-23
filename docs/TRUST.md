@@ -44,6 +44,7 @@ Record every request made by the service worker, content scripts, and popup duri
 ### 4. Static rules
 
 - ESLint bans `fetch`, `XMLHttpRequest`, `WebSocket`, `navigator.sendBeacon`, `eval`, `new Function`, `innerHTML`/`outerHTML`/`insertAdjacentHTML`, and `window.postMessage`.
+- The same text search runs on a fresh build, so code added by the build tools (a compromised esbuild, or a dependency bundled by accident) is caught too. It also bans other ways to reach the network: WebRTC, WebTransport, setting `src`/`href` or URL attributes, `new Image()`, and CSS `url()`/`@import`. A test plants each kind of call in the bundle to prove the scan catches it.
 - Keycap text is set only with `textContent`.
 - `console.*` calls are banned outside a debug flag that's off in release builds.
 - A CI script compares `manifest.json` permissions to a committed allowlist and fails on any difference.

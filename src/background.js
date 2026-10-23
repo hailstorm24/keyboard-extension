@@ -49,12 +49,23 @@ export async function setTabEnabled(tabId, enabled) {
     return { ok: true };
   }
 
+  // Only scripts/build.js output has content.js; the source folder doesn't.
+  if (!chrome.runtime.getManifest().version_name?.endsWith('(built)')) return { ok: false, reason: 'not-built' };
+
   const tab = await chrome.tabs.get(tabId).catch(() => null);
   if (!tab || isRestrictedUrl(tab.url)) return { ok: false, reason: 'restricted' };
+  if (tab.url?.startsWith('file:') && !(await chrome.extension.isAllowedFileSchemeAccess())) {
+    return { ok: false, reason: 'file-access' };
+  }
   try {
     await inject(tabId);
-  } catch {
-    return { ok: false, reason: 'restricted' };
+  } catch (err) {
+    // chrome:// and other pages we can't see the URL of only fail here.
+    const message = String(err?.message ?? err);
+    if (tab.url === undefined && /cannot (access|be scripted)|chrome:\/\/|extensions gallery/i.test(message)) {
+      return { ok: false, reason: 'restricted' };
+    }
+    return { ok: false, reason: 'no-access', detail: message };
   }
   await saveEnabledTabs([...others, tabId]);
   await setBadge(tabId, true);

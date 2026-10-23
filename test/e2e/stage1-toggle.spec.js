@@ -157,6 +157,29 @@ test.describe('Stage 1: per-tab switch', () => {
     expect(await ext.setEnabled(page, true)).toEqual({ ok: false, reason: 'restricted' });
   });
 
+  test('local files work with file access, and say why without it', async ({ ext, context }) => {
+    // Extensions loaded with --load-extension may already have file access.
+    const allowed = await ext.call(() => chrome.extension.isAllowedFileSchemeAccess());
+    const page = await context.newPage();
+    await page.goto(new URL('../fixtures/recorder.html', import.meta.url).href);
+    if (allowed) {
+      expect(await ext.enable(page)).toEqual({ ok: true });
+    } else {
+      expect(await ext.setEnabled(page, true)).toEqual({ ok: false, reason: 'file-access' });
+      expect(await ext.isEnabled(page)).toBe(false);
+    }
+  });
+
+  test('the popup explains why it could not turn on', async ({ ext, context }) => {
+    // Opened as a tab, the popup's active tab is itself: an extension page.
+    const popup = await context.newPage();
+    await popup.goto(ext.popupUrl);
+    await popup.locator('body[data-ready="true"]').waitFor();
+    await popup.locator('#enabled').click();
+    await expect(popup.locator('#status')).toHaveText("Chrome doesn't allow extensions on this page.");
+    await expect(popup.locator('#enabled')).not.toBeChecked();
+  });
+
   test('pages that never load the overlay show no keycaps', async ({ ext }) => {
     const page = await ext.openPage('/recorder.html');
     await page.locator('#email').click();

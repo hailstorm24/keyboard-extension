@@ -66,6 +66,10 @@ describe('manifest.json', () => {
     assert.notEqual(manifest.incognito, 'split');
   });
 
+  test('source manifest is not marked as built (the build adds version_name)', () => {
+    assert.equal(manifest.version_name, undefined);
+  });
+
   test('no update_url pointing at a third-party server', () => {
     assert.equal(manifest.update_url, undefined);
   });

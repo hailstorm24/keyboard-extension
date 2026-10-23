@@ -21,20 +21,28 @@ async function isEnabled() {
 
 $('#enabled').checked = await isEnabled();
 
+const FAILURES = {
+  restricted: "Chrome doesn't allow extensions on this page.",
+  'file-access': 'To use it on local files, turn on "Allow access to file URLs" in the extension\'s details.',
+  'not-built': 'This is the source folder. Run "npm run build", then load the dist folder in chrome://extensions.',
+};
+
 $('#enabled').addEventListener('change', async (e) => {
   const enabled = e.target.checked;
-  // Ask once for access to all sites, so the overlay can come back after the
-  // tab navigates to another site. Without it, it still works on this page.
-  if (enabled && !(await chrome.permissions.contains(ALL_SITES))) {
-    await chrome.permissions.request(ALL_SITES).catch(() => false);
-  }
-  const res = await chrome.runtime.sendMessage({ type: MSG.SET_TAB_ENABLED, tabId, enabled });
-  if (!res?.ok) {
-    e.target.checked = false;
-    showStatus("Chrome doesn't allow extensions on this page.");
-  } else {
+  // Send the request before anything else is awaited: Chrome only allows a
+  // permission prompt during the click, and the prompt can close the popup.
+  const result = chrome.runtime.sendMessage({ type: MSG.SET_TAB_ENABLED, tabId, enabled });
+  // Ask for access to all sites, so the overlay can come back after the tab
+  // navigates to another site. Without it, it still works on this page.
+  if (enabled) chrome.permissions.request(ALL_SITES).catch(() => false);
+
+  const res = await result.catch((err) => ({ ok: false, reason: 'error', detail: String(err?.message ?? err) }));
+  if (res?.ok) {
     showStatus('');
+    return;
   }
+  e.target.checked = false;
+  showStatus(FAILURES[res?.reason] ?? `Couldn't turn on the overlay: ${res?.detail ?? 'no response from the extension'}`);
 });
 
 $('#move').addEventListener('click', async () => {

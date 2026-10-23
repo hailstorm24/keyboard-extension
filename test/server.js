@@ -17,7 +17,16 @@ const HEADERS = {
 
 export const ORIGINS = { top: 'http://localhost:3000', other: 'http://127.0.0.1:3001' };
 
+// Serves `dir`. Exported so scripts can serve other folders the same way.
+export function createHandler(dir) {
+  return (req, res) => handle(dir, req, res);
+}
+
 function handler(req, res) {
+  handle(dir, req, res);
+}
+
+function handle(dir, req, res) {
   const path = new URL(req.url, 'http://x').pathname;
   if (path === '/health') {
     res.writeHead(200).end('ok');

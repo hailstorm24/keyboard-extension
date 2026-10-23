@@ -52,15 +52,15 @@ Key Overlay is open source: [repository URL]
 
 **Graphic assets**
 
-| Asset | Size | What to show |
-|---|---|---|
-| Store icon | 128×128 | `icons/icon-128.png` (already has the required 16px padding) |
-| Screenshot 1 (required) | 1280×800 | A sign-up form mid-typing: keycaps floating up, the password field showing `•` |
-| Screenshot 2 | 1280×800 | The popup open next to the page, showing the settings |
-| Screenshot 3 | 1280×800 | A shortcut keycap (`⌘+K`) and a click ripple |
-| Small promo tile (if asked) | 440×280 | The icon and "Key Overlay" on a plain background |
+| Asset | Size | File | Shows |
+|---|---|---|---|
+| Store icon | 128×128 | `icons/icon-128.png` | Already has the required 16px padding |
+| Screenshot 1 (required) | 1280×800 | `docs/store/screenshots/1-masking.png` | A sign-up form mid-typing: email letters and ⇥, then `•` for the password |
+| Screenshot 2 | 1280×800 | `docs/store/screenshots/2-settings.png` | The popup next to the page, with its settings |
+| Screenshot 3 | 1280×800 | `docs/store/screenshots/3-shortcuts-and-clicks.png` | A `⌘+K` keycap opening an app's command palette, and a click ripple |
+| Small promo tile (if asked) | 440×280 | `docs/store/screenshots/promo-small-440x280.png` | The icon and "Key Overlay" |
 
-The fixture pages make good screenshot backgrounds: run `npm run fixtures` and open `http://localhost:3000/recorder.html`.
+All four images come from the real extension, captured by `npm run screenshots` on made-up demo pages in `scripts/screenshots/`. Run it again after any visual change. The popup in screenshot 2 is rendered separately and placed where Chrome shows it, because Chrome draws the real popup outside the page.
 
 **Official URL / homepage:** [repository or project page URL]
 

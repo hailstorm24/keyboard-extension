@@ -13,7 +13,8 @@
     "lint": "eslint src",
     "fixtures": "node test/server.js",
     "package": "npm test && node scripts/package.js",
-    "icons": "node scripts/make-icons.js"
+    "icons": "node scripts/make-icons.js",
+    "screenshots": "node scripts/make-screenshots.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

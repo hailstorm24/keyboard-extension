@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fieldnote · Q3 planning</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; height: 100vh; font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; color: #1f2430; background: #fff; display: grid; grid-template-columns: 240px 1fr; }
+    nav { background: #f4f5f7; border-right: 1px solid #e3e6eb; padding: 20px 14px; }
+    .brand { font-weight: 600; margin: 0 8px 20px; }
+    .brand span { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: #fca311; margin-right: 8px; }
+    nav a { display: block; padding: 6px 10px; border-radius: 6px; color: #4b5263; text-decoration: none; }
+    nav a.on { background: #e3e6eb; color: #1f2430; font-weight: 500; }
+    nav .group { margin: 18px 10px 6px; font-size: 12px; color: #8b93a7; text-transform: uppercase; letter-spacing: .5px; }
+    main { padding: 48px 72px; position: relative; }
+    .crumbs { color: #8b93a7; font-size: 13px; margin-bottom: 12px; }
+    h1 { margin: 0 0 20px; font-size: 32px; font-weight: 600; }
+    p { max-width: 640px; color: #3b4252; }
+    li { margin: 4px 0; color: #3b4252; }
+    .scrim { position: absolute; inset: 0; background: rgba(20,33,61,.25); display: none; }
+    .palette { position: absolute; top: 96px; left: 50%; transform: translateX(-50%); width: 520px; background: #fff; border-radius: 12px; box-shadow: 0 16px 48px rgba(20,33,61,.25); display: none; overflow: hidden; }
+    .open .scrim, .open .palette { display: block; }
+    .palette input { width: 100%; height: 52px; border: 0; border-bottom: 1px solid #e3e6eb; padding: 0 18px; font: inherit; font-size: 17px; outline: none; }
+    .palette div { padding: 10px 18px; color: #3b4252; }
+    .palette div.sel { background: #fff4e0; }
+    .palette kbd { float: right; color: #8b93a7; font: 12px/2 ui-monospace, monospace; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="brand"><span></span>Fieldnote</div>
+    <div class="group">Team</div>
+    <a href="#">Inbox</a>
+    <a href="#" class="on">Q3 planning</a>
+    <a href="#">Design reviews</a>
+    <a href="#">Onboarding</a>
+    <div class="group">Private</div>
+    <a href="#">Reading list</a>
+    <a href="#">Ideas</a>
+  </nav>
+  <main id="main">
+    <div class="crumbs">Team / Q3 planning</div>
+    <h1>Q3 planning</h1>
+    <p>Goals for the quarter, owners, and the open questions we still need to settle before the kickoff on Monday.</p>
+    <ul>
+      <li>Ship search across linked notes</li>
+      <li>Cut page load time in half on large workspaces</li>
+      <li>Launch the public template gallery</li>
+    </ul>
+    <p>Open question: do we move the weekly sync to Tuesdays?</p>
+    <div class="scrim"></div>
+    <div class="palette">
+      <input id="palette-input" placeholder="Search commands">
+      <div class="sel">Open settings <kbd>⌘ ,</kbd></div>
+      <div>Open recent note</div>
+      <div>Open in new window <kbd>⌘ ⇧ N</kbd></div>
+    </div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

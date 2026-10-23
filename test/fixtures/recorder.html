@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Recorder</title>
+  <script src="/recorder.js"></script>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 24px; }
+    label { display: block; margin-top: 12px; }
+    #target-grid { position: fixed; inset: 0; z-index: 0; }
+    main { position: relative; z-index: 1; max-width: 480px; }
+  </style>
+</head>
+<body>
+  <!-- Fills the viewport so clicks anywhere (including under the overlay) land on a page element. -->
+  <div id="target-grid"></div>
+  <main>
+    <h1 data-style-probe>Sign up</h1>
+    <p id="para" data-style-probe>Select this sentence to test that drag-selection still works.</p>
+    <form id="form" onsubmit="return false">
+      <label>Email <input id="email" type="email" autocomplete="email"></label>
+      <label>Password <input id="password" type="password" autocomplete="new-password"></label>
+      <label>Notes <textarea id="notes"></textarea></label>
+      <label><input id="agree" type="checkbox"> I agree</label>
+      <label>Plan
+        <select id="plan"><option>Free</option><option>Pro</option></select>
+      </label>
+      <button id="submit" type="submit" data-style-probe>Create account</button>
+    </form>
+    <p><a id="link" href="#section">Jump link</a></p>
+    <p><a id="next" href="/page2.html">Next page (same site)</a></p>
+    <p><a id="cross" href="http://127.0.0.1:3001/page2.html">Other site</a></p>
+    <div style="height: 1500px"></div>
+    <h2 id="section">Section</h2>
+  </main>
+</body>
+</html>

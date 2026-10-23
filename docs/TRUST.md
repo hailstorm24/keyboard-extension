@@ -59,19 +59,22 @@ Before each release, on: Gmail, Google Docs, YouTube fullscreen, a React app, St
 
 ## Test fixtures
 
-Local pages under `test/fixtures/`, served on two origins (`localhost:3000` and `127.0.0.1:3001`) so cross-site iframe tests work offline:
+Local pages under `test/fixtures/`, served on two origins (`localhost:3000` and `127.0.0.1:3001`) so cross-site iframe tests work offline. Most of them load `recorder.js`, which records every event, DOM change, `message` event, and key computed styles the page can see.
 
 | Fixture | Purpose |
 |---|---|
-| `recorder.html` | Records every event and DOM change for the off-vs-on comparison |
-| `hostile-css.html` | `* { all: unset !important }`, `div { display: none !important }`, `transform` on `<html>`, zoom |
-| `hostile-js.html` | Removes our element, reads `host.shadowRoot`, dispatches fake key events, posts fake extension messages |
+| `recorder.html`, `page2.html` | A sign-up form for the off-vs-on comparison and navigation tests |
+| `hostile-css.html` | `* { all: unset !important }`, `div { display: none !important }`, `transform` on `<html>`, zoom, rules targeting our element |
+| `hostile-js.html` | Removes our element, reads `host.shadowRoot`, dispatches fake key and click events, posts fake extension messages |
 | `sensitive-fields.html` | Password, show-password toggle, `cc-*`, `one-time-code`, on-screen PIN pad |
-| `payment-frame.html` | Top page on one origin embedding a card form from the other origin |
+| `payment-frame.html` | Top page embedding a same-site iframe (`same-frame.html`) and a card form from the other origin (`card-form.html`) |
 | `shortcuts.html` | Page that uses its own ⌘K command bar and other shortcuts |
-| `editors.html` | `contenteditable`, `<textarea>`, `<canvas>` app |
+| `editors.html` | `contenteditable`, `<textarea>`, `<canvas>` drawing, drag-and-drop, right-click menu |
 | `strict-csp.html` | `Content-Security-Policy: default-src 'none'` |
-| `spa.html` | Replaces `<body>` on navigation |
+| `spa.html` | Replaces `<body>`, or every child of `<html>`, on navigation |
+| `fullscreen.html` | An element that goes fullscreen |
+
+How to run the tests, and the names the extension must provide for them, are in [test/README.md](../test/README.md).
 
 ## Stage by stage
 

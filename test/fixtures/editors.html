@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Editors</title>
+  <script src="/recorder.js"></script>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 24px; }
+    #rich { border: 1px solid #999; min-height: 60px; padding: 8px; }
+    #canvas { border: 1px solid #999; display: block; margin-top: 12px; touch-action: none; }
+    #drag, #drop { display: inline-block; padding: 16px; margin: 12px 12px 0 0; border: 1px dashed #999; }
+  </style>
+</head>
+<body>
+  <h1>Editors</h1>
+  <p id="para">Double-click a word, or drag across this sentence to select it.</p>
+  <div id="rich" contenteditable="true"></div>
+  <textarea id="plain" rows="3" cols="40"></textarea>
+  <canvas id="canvas" width="400" height="200"></canvas>
+  <div id="drag" draggable="true">Drag me</div>
+  <div id="drop">Drop here</div>
+  <div id="menu-target" style="padding: 16px; border: 1px solid #999; margin-top: 12px">Right-click me</div>
+  <script src="/editors.js"></script>
+</body>
+</html>

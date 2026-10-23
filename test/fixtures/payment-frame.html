@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Checkout</title>
+  <script src="/recorder.js"></script>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 24px; }
+    iframe { display: block; width: 420px; height: 140px; border: 1px solid #999; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <h1>Checkout</h1>
+  <label>Email (top page) <input id="email" type="email"></label>
+  <!-- Same site as the top page. -->
+  <iframe id="same" src="/same-frame.html" title="Same-site frame"></iframe>
+  <!-- A different site, like a payment provider's card form. -->
+  <iframe id="other" src="http://127.0.0.1:3001/card-form.html" title="Card form"></iframe>
+</body>
+</html>

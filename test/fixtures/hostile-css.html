@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Hostile CSS</title>
+  <script src="/recorder.js"></script>
+  <!-- Rules that would wreck an overlay that isn't isolated in a shadow root. -->
+  <style>
+    * { all: unset !important; }
+    html, body, main, label, p, h1 { display: block !important; }
+    input { display: inline-block !important; border: 1px solid !important; min-width: 200px !important; min-height: 24px !important; }
+    div { display: none !important; }
+    span { visibility: hidden !important; }
+    [class], [style] { opacity: 0 !important; }
+    html { transform: scale(0.8) rotate(1deg) !important; zoom: 1.25 !important; }
+    body::after { content: ""; position: fixed !important; inset: 0 !important; z-index: 2147483647 !important; pointer-events: none !important; }
+    *:not(html):not(body) { z-index: 2147483647 !important; }
+    key-overlay-host { display: none !important; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 data-style-probe>Hostile CSS</h1>
+    <p data-style-probe>Every rule here tries to hide, shrink, or cover the overlay.</p>
+    <label>Type here <input id="field" type="text"></label>
+  </main>
+</body>
+</html>

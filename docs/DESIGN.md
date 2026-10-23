@@ -29,7 +29,7 @@ See [TRUST.md](TRUST.md) for the privacy and safety promises, and how each stage
 
 - Keycaps appear in the overlay area and rise, then fade out.
 - Special keys show as symbols: `⌘ ⌃ ⌥ ⇧ ↵ ⌫ ⇥ ⇪ Esc ↑ ↓ ← →`, `Space`.
-- With "Group combos" on, shortcuts show as one keycap (`⌘+K`) instead of separate keys.
+- With "Group combos" on, shortcuts show as one keycap (`⌘+K`) instead of separate keys. Modifiers are listed in macOS order (`⌃⌥⇧⌘`). A modifier pressed and released on its own shows when it's released. Shift used to type a capital or symbol isn't shown separately (`A`, not `⇧+A`). With `⌥`, the label uses the physical key (`⌥+A`, not `å`).
 - A held key shows once, not once per auto-repeat.
 - **Masking.** These show as `•` instead of the real key:
   - password fields (`type="password"`, including after a "show password" toggle turns them into text fields)
@@ -39,7 +39,8 @@ See [TRUST.md](TRUST.md) for the privacy and safety promises, and how each stage
 ### Clicks
 
 - Each click shows a ripple at the cursor, styled differently for left, right, and middle buttons.
-- No ripple is shown for clicks on or near a masked field, so on-screen PIN pads don't reveal which digits were pressed.
+- No ripple is shown for clicks within 48px of a masked field, or inside the same `<form>` or `<fieldset>` as one. This way on-screen PIN pads don't reveal which digits were pressed.
+- No ripple is shown for clicks inside another site's iframe while iframe masking is on.
 
 ### Moving the overlay
 
@@ -86,14 +87,15 @@ keyboard-extension/
 │   └── shared/
 │       ├── settings.js      # defaults, schema, load/save, change subscription
 │       └── messages.js      # message names between popup, background, page
-├── test/                    # see TRUST.md
+├── scripts/build.js         # builds a loadable extension into dist/
+├── test/                    # see test/README.md and TRUST.md
 ├── docs/
 │   ├── DESIGN.md
 │   └── TRUST.md
 └── icons/                   # 16/32/48/128, plus an "on" toolbar badge
 ```
 
-Plain ES modules, no build step and no third-party runtime dependencies.
+Plain ES modules and no third-party runtime dependencies. The background script and popup load `src/` as-is. Scripts injected with `chrome.scripting` can't be ES modules, so `npm run build` uses esbuild (a dev-only tool) to bundle `src/content/index.js` into a single `content.js` in `dist/`. The background script injects that file.
 
 ### Pieces and how they talk
 

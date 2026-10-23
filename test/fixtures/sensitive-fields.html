@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sensitive fields</title>
+  <script src="/recorder.js"></script>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 24px; }
+    label { display: block; margin-top: 12px; }
+    #pinpad { display: grid; grid-template-columns: repeat(3, 56px); gap: 6px; margin-top: 8px; }
+    #pinpad button { height: 48px; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>Sensitive fields</h1>
+  <label>Email (not sensitive) <input id="email" type="email" autocomplete="email"></label>
+  <label>Password <input id="password" type="password" autocomplete="current-password"></label>
+  <label>Password with show toggle
+    <input id="toggle-password" type="password">
+    <button id="show" type="button" onclick="const p=document.getElementById('toggle-password');p.type=p.type==='password'?'text':'password'">Show</button>
+  </label>
+  <label>Card number <input id="cc-number" autocomplete="cc-number" inputmode="numeric"></label>
+  <label>CVC <input id="cc-csc" autocomplete="cc-csc"></label>
+  <label>Expiry <input id="cc-exp" autocomplete="billing cc-exp"></label>
+  <label>One-time code <input id="otp" autocomplete="one-time-code"></label>
+
+  <h2>PIN pad</h2>
+  <!-- Clicks inside the same fieldset or form as a masked field show no ripple. -->
+  <fieldset id="pin-form">
+  <label>PIN <input id="pin" type="password" readonly></label>
+  <div id="pinpad">
+    <button type="button">1</button><button type="button">2</button><button type="button">3</button>
+    <button type="button">4</button><button type="button">5</button><button type="button">6</button>
+    <button type="button">7</button><button type="button">8</button><button type="button">9</button>
+    <span></span><button type="button">0</button><span></span>
+  </div>
+  </fieldset>
+  <p><button id="unrelated" type="button" style="margin-top: 240px">Unrelated button far from masked fields</button></p>
+  <script src="/pinpad.js"></script>
+</body>
+</html>
